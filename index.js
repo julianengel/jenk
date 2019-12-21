@@ -1,15 +1,30 @@
 require('dotenv').config()
-
+var mongoose = require('mongoose');
+var bodyParser = require('body-parser')
 // Load dependencies
 const aws = require('aws-sdk');
 const express = require('express');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 
+var Post = require('./models/post');
+
 const app = express();
+app.use(bodyParser.json());
 
 var accessKeyId = process.env.accessKeyId;
 var secretAccessKey = process.env.secretAccessKey;
+
+let db_usr = process.env.db_adr
+let db_pwd = process.env.db_pwd
+let db_adr = process.env.db_adr
+
+
+db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/test?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+    .then(console.log("Success in connecting to Database"))
+    .catch(err => { throw err });
+
+
 
 
 // Views in public directory
@@ -48,6 +63,22 @@ app.get('/', function(request, response) {
 });
 
 app.get("/success", function(request, response) {
+
+    // // create a new user
+    // var newPost = Post({
+    //     location: "location",
+    //     description: "description",
+    //     url: "url"
+    // });
+
+    // // save the user
+    // newPost.save(function(err) {
+    //     if (err) throw err;
+
+    //     console.log('Post created! + ' + "url");
+    // });
+
+
     response.sendFile(__dirname + '/public/success.html');
 });
 
@@ -56,14 +87,36 @@ app.get("/error", function(request, response) {
 });
 
 app.post('/upload', function(request, response, next) {
+
+
+
     upload(request, response, function(error) {
         if (error) {
             console.log(error);
             return response.redirect("/error");
         }
         request.files.forEach(file => {
-        	let url = "https://codeerolabs.fra1.digitaloceanspaces.com/"
-            console.log(url+file.originalname)
+            let url_part = "https://codeerolabs.fra1.digitaloceanspaces.com/"
+            let url = url_part + file.originalname
+            let location = request.body.location
+            let description = request.body.description
+            let date = request.body.date
+
+            // create a new user
+            var newPost = Post({
+                date: date,
+                location: location,
+                description: description,
+                url: url,
+            });
+
+            // save the user
+            newPost.save(function(err) {
+                if (err) throw err;
+
+                console.log('Post created! + ' + url);
+            });
+
 
         })
         console.log('File uploaded successfully.');
