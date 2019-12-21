@@ -12,6 +12,10 @@ var Post = require('./models/post');
 const app = express();
 app.use(bodyParser.json());
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+
+
 var accessKeyId = process.env.accessKeyId;
 var secretAccessKey = process.env.secretAccessKey;
 
@@ -61,6 +65,23 @@ const upload = multer({
 app.get('/', function(request, response) {
     response.sendFile(__dirname + '/public/index.html');
 });
+
+app.get('/feed', function(request, response) {
+
+    // get all the users
+    Post.find({}, function(err, posts) {
+        if (err) throw err;
+
+        // object of all the users
+        console.log(posts);
+        response.render('pages/feed', {posts:posts});
+    });
+
+
+    
+});
+
+
 
 app.get("/success", function(request, response) {
 

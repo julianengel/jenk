@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Posts</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style type="text/css">
+    body {
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+
+    }
+
+    .feed {
+        margin: auto;
+        width: 35vw;
+        padding-top: 100px;
+    }
+
+    .box {
+
+        width: 35vw;
+        border: 1px solid #95a5a6;
+        margin-bottom: 50px;
+        border-radius: 3px;
+
+    }
+
+    .imgInBox {
+        width: 35vw;
+        height: 35vw;
+        object-fit: cover;
+    }
+
+    .header {
+        height: 50px;
+        background-color: white;
+        border-bottom: 0.5px solid #95a5a6;
+    }
+
+    .profile-name {
+        padding-top: 10px;
+        padding-left: 85px;
+        font-weight: bold;
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+    }
+
+    .location {
+        padding-left: 85px;
+        font-weight: thin;
+        font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+        font-size: 65%;
+    }
+
+    .profile-pic {
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+        border-radius: 50%;
+        float: left;
+        margin: 10px 0px 0px 30px;
+    }
+
+    .actions {
+        background-color: white;
+        height: 35px;
+        border-top: 1px solid #95a5a6;
+        margin-top: -5px;
+    }
+
+    .icons {
+        padding-top: 15px;
+        padding-left: 30px;
+        width: 90%
+    }
+
+    .icons i {
+        width: 25px;
+    }
+
+    .right-float {
+        float: right;
+        width: 50px;
+    }
+
+    .description {
+        padding-left: 30px;
+    }
+
+    .description-text {
+        margin-top: -10px;
+    }
+
+    #nav-icons {
+        width: 220px;
+        color: white;
+    }
+
+    #nav-icons i {
+        width: 45px;
+    }
+
+    .dots {
+        margin-top: -25px;
+    }
+
+    .navbar-nav {
+        width: 100%;
+    }
+
+    .navbar-nav {
+        flex-direction: row;
+
+    }
+       .navbar-nav i {
+        padding-left: 20px;
+
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-light bg-light fixed-top">
+            <a class="navbar-brand">JENK</a>
+            <form class="form-inline d-sm-none d-none d-md-block">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            </form>
+            <div class="" id="navbarNav">
+                <ul class="navbar-nav ">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"><i class="far fa-compass"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="far fa-heart"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="far fa-user"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="feed">
+        <% posts.forEach(post => { %>
+        <div class="box">
+            <div class="header">
+                <img src="https://codeerolabs.fra1.digitaloceanspaces.com/me.jpg" class="profile-pic">
+                <div class="profile-name"> The Coffee Angel</div>
+                <div class="location">
+                    <%=post.location%>
+                </div>
+                <div class="right-float dots"><i class="fas fa-ellipsis-h"></i></div>
+            </div>
+            <img src="<%=post.url%>" class="imgInBox">
+            <div class="meta">
+                <div class="actions">
+                    <div class="icons"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i> <i class="far fa-bookmark right-float"></i></div>
+                </div>
+                <div class="description">
+                    <p> <b>1.000.000 loves </b></p>
+                    <p class="description-text"><b>thecoffeeangel</b>
+                        <%= post.day%> |
+                        <%=post.date_display%>
+                    </p>
+                    <p class="description-text">
+                        <%= post.description%>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+    <!--         <div class="box">
+            <div class="header">
+                <img src="https://codeerolabs.fra1.digitaloceanspaces.com/me.jpg" class="profile-pic">
+                <div class="profile-name"> The Coffee Angel</div>
+            </div>
+            <img src="https://codeerolabs.fra1.digitaloceanspaces.com/Screenshot 2019-07-30 at 1.08.54 PM.png" class="imgInBox">
+            <div class="meta">
+                <div class="actions">
+                    <div class="icons"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i> <i class="far fa-bookmark right-float"></i></div>
+                </div>
+                <div class="description">
+                    <p><b>thecoffeeangel</b> #day135 | 24.12.2019</p>
+                    <p>Lorem Ipsum, Ipsum Stripsum, Dolor Est</p>
+                </div>
+            </div>
+        </div> -->
+    <script src="https://kit.fontawesome.com/6fd0d324f5.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
