@@ -7,7 +7,7 @@ var postSchema = new Schema({
     date: Date,
     location: String,
     description: String,
-    url: String,
+    urls: Array,
     date_display: String,
     day: String,
     created_at: Date,

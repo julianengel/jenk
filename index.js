@@ -74,11 +74,11 @@ app.get('/feed', function(request, response) {
 
         // object of all the users
         console.log(posts);
-        response.render('pages/feed', {posts:posts});
+        response.render('pages/feed', { posts: posts });
     });
 
 
-    
+
 });
 
 
@@ -116,30 +116,34 @@ app.post('/upload', function(request, response, next) {
             console.log(error);
             return response.redirect("/error");
         }
+
+        let urls = []
         request.files.forEach(file => {
             let url_part = "https://codeerolabs.fra1.digitaloceanspaces.com/"
             let url = url_part + file.originalname
-            let location = request.body.location
-            let description = request.body.description
-            let date = request.body.date
-
-            // create a new user
-            var newPost = Post({
-                date: date,
-                location: location,
-                description: description,
-                url: url,
-            });
-
-            // save the user
-            newPost.save(function(err) {
-                if (err) throw err;
-
-                console.log('Post created! + ' + url);
-            });
-
+            urls.push(url)
 
         })
+        let location = request.body.location
+        let description = request.body.description
+        let date = request.body.date
+        console.log(urls)
+        // create a new user
+        var newPost = Post({
+            date: date,
+            location: location,
+            description: description,
+            urls: urls,
+        });
+
+        // save the user
+        newPost.save(function(err) {
+            if (err) throw err;
+
+            console.log('Post created! + ' + urls);
+        });
+
+
         console.log('File uploaded successfully.');
         response.redirect("/success");
     });
