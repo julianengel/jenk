@@ -118,17 +118,15 @@
     }
 
 
-.img-slider{
-	height: 100%;
-	width: 100%;
-}
+    .img-slider {
+        height: 100%;
+        width: 100%;
+    }
 
 
-.carousel-inner{
-  width:100%;
-}
-
-
+    .carousel-inner {
+        width: 100%;
+    }
     </style>
 </head>
 
@@ -181,7 +179,7 @@
                                 </div>
                                 <%} else { %>
                                 <div class="carousel-item">
-                                    <img src="<%=image%>" class="imgInBox">
+                                    <img src="placeholder.png" class="imgInBox lazy" data-src="<%=image%>">
                                 </div>
                                 <% }%>
                                 <%})%>
@@ -223,7 +221,32 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
 
+        if ("IntersectionObserver" in window) {
+            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        let lazyImage = entry.target;
+                        lazyImage.src = lazyImage.dataset.src;
+                        lazyImage.classList.remove("lazy");
+                        lazyImageObserver.unobserve(lazyImage);
+                        console.log("Loaded + " + lazyImage)
+                    }
+                });
+            });
+
+            lazyImages.forEach(function(lazyImage) {
+                lazyImageObserver.observe(lazyImage);
+            });
+        } else {
+            alert("Broswer not supported")
+            // Possibly fall back to a more compatible method here
+        }
+    });
+    </script>
 </body>
 
 </html>
