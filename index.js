@@ -1,37 +1,37 @@
+// Setup The .env File
 require('dotenv').config()
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser')
-// Load dependencies
+
+// Importing Our Modules 
+
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
 const aws = require('aws-sdk');
 const express = require('express');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-
-var Post = require('./models/post');
-
+const Post = require('./models/post');
 const app = express();
-app.use(bodyParser.json());
+const accessKeyId = process.env.accessKeyId;
+const secretAccessKey = process.env.secretAccessKey;
+const db_usr = process.env.db_adr
+const db_pwd = process.env.db_pwd
+const db_adr = process.env.db_adr
+const app_name = process.env.app_name
+const profile_name = process.env.profile_name
 
+
+// Set Up Yhe App
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+// Use Body Parser
+app.use(bodyParser.json());
+// Serve Static files from the public directory
+app.use(express.static(__dirname + '/public'))
 
-
-var accessKeyId = process.env.accessKeyId;
-var secretAccessKey = process.env.secretAccessKey;
-
-let db_usr = process.env.db_adr
-let db_pwd = process.env.db_pwd
-let db_adr = process.env.db_adr
-app.use(express.static(__dirname + 'public'))
+// Connect to the Datase
 db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/thecoffeeangel?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(console.log("Success in connecting to Database"))
     .catch(err => { throw err });
-
-
-
-
-// Views in public directory
-app.use(express.static('public'));
 
 
 // Set S3 endpoint to DigitalOcean Spaces
@@ -42,11 +42,13 @@ const s3 = new aws.S3({
     secretAccessKey: secretAccessKey
 });
 
-// Change bucket property to your Space name
+// Change bucket property to our Space name (bucket/app_name)
+// No more then 10 by default.
+
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'jenk',
+        bucket: app_name,
         acl: 'public-read',
         metadata: function(req, file, cb) {
             cb(null, { fieldName: file.fieldname });
@@ -58,69 +60,54 @@ const upload = multer({
     })
 }).array('upload', 10);
 
+// Main GET & POST requests
 
-
-// Main, error and success views
+// Home and Upload Page
 app.get('/', function(request, response) {
     response.render("pages/index")
-    // response.sendFile(__dirname + '/public/index.html');
 });
 
+// Feed Page 
 app.get('/feed', function(request, response) {
 
-    // get all the users
+    // get all the posts - sort by date
     Post.find({}, function(err, posts) {
         if (err) throw err;
-
-        // object of all the users
         console.log(posts);
-        response.render('pages/feed', { posts: posts });
+        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts });
     });
 
-
-
 });
 
-
-
+// Render Success Page
 app.get("/success", function(request, response) {
 
-    // // create a new user
-    // var newPost = Post({
-    //     location: "location",
-    //     description: "description",
-    //     url: "url"
-    // });
-
-    // // save the user
-    // newPost.save(function(err) {
-    //     if (err) throw err;
-
-    //     console.log('Post created! + ' + "url");
-    // });
-
-
-    response.sendFile(__dirname + '/public/success.html');
+    response.render('pages/success')
 });
+
+// Error Page 
+
+// pass in error eventually
 
 app.get("/error", function(request, response) {
-    response.sendFile(__dirname + '/public/error.html');
+    response.render('pages/error')
 });
 
 
+// Upload POST route to accept upload
 app.post('/upload', function(request, response, next) {
 
-
-
+// Upload files to AWS
     upload(request, response, function(error) {
         if (error) {
             console.log(error);
             return response.redirect("/error");
         }
 
+        // Preparing Post Data Here 
         let urls = []
         request.files.forEach(file => {
-            let url_part = "https://jenk.fra1.cdn.digitaloceanspaces.com/posts/"
+            let url_part = "https://" + app_name + ".fra1.cdn.digitaloceanspaces.com/posts/"
             let url = url_part + file.originalname
             urls.push(url)
 
@@ -129,7 +116,8 @@ app.post('/upload', function(request, response, next) {
         let description = request.body.description
         let date = request.body.date
         console.log(urls)
-        // create a new user
+
+        // create a new post
         var newPost = Post({
             date: date,
             location: location,
@@ -137,13 +125,14 @@ app.post('/upload', function(request, response, next) {
             urls: urls,
         });
 
-        // save the user
+        // save the post 
         newPost.save(function(err) {
             if (err) throw err;
 
             console.log('Post created! + ' + urls);
         });
 
+        // success, redirect to Status page
 
         console.log('File uploaded successfully.');
         response.redirect("/success");
@@ -151,6 +140,7 @@ app.post('/upload', function(request, response, next) {
 });
 
 
+// Main App, listen
 
 app.listen(3001, function() {
     console.log('Server listening on port 3001.');
