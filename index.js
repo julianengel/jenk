@@ -22,9 +22,8 @@ var secretAccessKey = process.env.secretAccessKey;
 let db_usr = process.env.db_adr
 let db_pwd = process.env.db_pwd
 let db_adr = process.env.db_adr
-
-
-db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/test?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
+app.use(express.static(__dirname + 'public'))
+db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/thecoffeeangel?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(console.log("Success in connecting to Database"))
     .catch(err => { throw err });
 
@@ -36,7 +35,7 @@ app.use(express.static('public'));
 
 
 // Set S3 endpoint to DigitalOcean Spaces
-const spacesEndpoint = new aws.Endpoint('codeerolabs.fra1.digitaloceanspaces.com');
+const spacesEndpoint = new aws.Endpoint('fra1.digitaloceanspaces.com');
 const s3 = new aws.S3({
     endpoint: spacesEndpoint,
     accessKeyId: accessKeyId,
@@ -54,7 +53,7 @@ const upload = multer({
         },
         key: function(request, file, cb) {
             console.log(file);
-            cb(null, file.originalname);
+            cb(null, "posts/" + file.originalname);
         }
     })
 }).array('upload', 10);
@@ -63,7 +62,8 @@ const upload = multer({
 
 // Main, error and success views
 app.get('/', function(request, response) {
-    response.sendFile(__dirname + '/public/index.html');
+    response.render("pages/index")
+    // response.sendFile(__dirname + '/public/index.html');
 });
 
 app.get('/feed', function(request, response) {
@@ -120,7 +120,7 @@ app.post('/upload', function(request, response, next) {
 
         let urls = []
         request.files.forEach(file => {
-            let url_part = "https://codeerolabs.fra1.digitaloceanspaces.com/jenk/"
+            let url_part = "https://jenk.fra1.cdn.digitaloceanspaces.com/posts/"
             let url = url_part + file.originalname
             urls.push(url)
 

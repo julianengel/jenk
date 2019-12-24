@@ -161,7 +161,7 @@
                     <% posts.forEach(post => { %>
                     <div class="box">
                         <div class="header">
-                            <img src="https://codeerolabs.fra1.digitaloceanspaces.com/me.jpg" class="profile-pic">
+                            <img src="https://jenk.fra1.cdn.digitaloceanspaces.com/profiles/me.jpg" class="profile-pic">
                             <div class="profile-name"> The Coffee Angel</div>
                             <div class="location">
                                 <%=post.location%>
@@ -175,11 +175,11 @@
                                 <% post.urls.forEach( function(image,i) {%>
                                 <%if (i == 0){ %>
                                 <div class="carousel-item active">
-                                    <img src="<%=image%>" class="img-slider">
+                                    <img src="placeholder.svg" class="imgInBox lazy img-slider" data-src="<%=image%>">
                                 </div>
                                 <%} else { %>
                                 <div class="carousel-item">
-                                    <img src="placeholder.png" class="imgInBox lazy" data-src="<%=image%>">
+                                    <img src="placeholder.svg" class="imgInBox lazy" data-src="<%=image%>">
                                 </div>
                                 <% }%>
                                 <%})%>
