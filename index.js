@@ -12,6 +12,7 @@ const multerS3 = require('multer-s3');
 const Post = require('./models/post');
 const app = express();
 const compression = require('compression');
+var minifyHTML = require('express-minify-html-2');
 const accessKeyId = process.env.accessKeyId;
 const secretAccessKey = process.env.secretAccessKey;
 const db_usr = process.env.db_adr
@@ -30,6 +31,21 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'))
 // Use Compression
 app.use(compression());
+// Use HTML Minifier
+app.use(minifyHTML({
+    override:      true,
+    exception_url: false,
+    htmlMinifier: {
+        removeComments:            true,
+        collapseWhitespace:        true,
+        collapseBooleanAttributes: true,
+        removeAttributeQuotes:     true,
+        removeEmptyAttributes:     true,
+        minifyJS:                  true
+    }
+}));
+
+
 // Connect to the Datase
 db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/thecoffeeangel?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(console.log("Success in connecting to Database"))
