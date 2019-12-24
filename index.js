@@ -11,6 +11,7 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const Post = require('./models/post');
 const app = express();
+const compression = require('compression');
 const accessKeyId = process.env.accessKeyId;
 const secretAccessKey = process.env.secretAccessKey;
 const db_usr = process.env.db_adr
@@ -27,7 +28,8 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 // Serve Static files from the public directory
 app.use(express.static(__dirname + '/public'))
-
+// Use Compression
+app.use(compression());
 // Connect to the Datase
 db = mongoose.connect(`mongodb+srv://julian:${db_pwd}@cluster0-nd7nf.mongodb.net/thecoffeeangel?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(console.log("Success in connecting to Database"))
