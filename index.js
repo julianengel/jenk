@@ -36,7 +36,7 @@ app.use(express.static('public'));
 
 
 // Set S3 endpoint to DigitalOcean Spaces
-const spacesEndpoint = new aws.Endpoint('fra1.digitaloceanspaces.com');
+const spacesEndpoint = new aws.Endpoint('codeerolabs.fra1.digitaloceanspaces.com');
 const s3 = new aws.S3({
     endpoint: spacesEndpoint,
     accessKeyId: accessKeyId,
@@ -47,7 +47,7 @@ const s3 = new aws.S3({
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: 'codeerolabs',
+        bucket: 'jenk',
         acl: 'public-read',
         metadata: function(req, file, cb) {
             cb(null, { fieldName: file.fieldname });
@@ -120,7 +120,7 @@ app.post('/upload', function(request, response, next) {
 
         let urls = []
         request.files.forEach(file => {
-            let url_part = "https://codeerolabs.fra1.digitaloceanspaces.com/"
+            let url_part = "https://codeerolabs.fra1.digitaloceanspaces.com/jenk/"
             let url = url_part + file.originalname
             urls.push(url)
 
