@@ -121,12 +121,9 @@
                         lazyImage.classList.remove("lazy");
                         lazyImageObserver.unobserve(lazyImage);
                         console.log("Loaded + " + lazyImage.src)
-                        console.log(entries)
-                        console.log("Index now is " + index + "and length is " + entries.length)
                     }
-                    console.log(entries.length)
                 });
-            });
+            },{rootMargin: "0px 0px 1500px 0px"});
 
 
             lazyImages.forEach(function(lazyImage) {
