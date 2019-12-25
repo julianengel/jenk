@@ -9,13 +9,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="style.css">
-   
 </head>
 
 <body>
     <div class="container" id="main">
         <nav class="navbar navbar-light bg-light fixed-top">
-            <a class="navbar-brand"><%=app_name%></a>
+            <a class="navbar-brand">
+                <%=app_name%></a>
             <form class="form-inline d-sm-none d-none d-md-block">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
             </form>
@@ -44,7 +44,9 @@
                     <div class="box">
                         <div class="header">
                             <img src="https://jenk.fra1.cdn.digitaloceanspaces.com/profiles/me.jpg" class="profile-pic">
-                            <div class="profile-name"> <%=profile_name%></div>
+                            <div class="profile-name">
+                                <%=profile_name%>
+                            </div>
                             <div class="location">
                                 <%=post.location%>
                             </div>
@@ -82,7 +84,8 @@
                             </div>
                             <div class="description">
                                 <p> <b>1.000.000 loves </b></p>
-                                <p class="description-text"><b><%=profile_name%></b>
+                                <p class="description-text"><b>
+                                        <%=profile_name%></b>
                                     <%= post.day%> |
                                     <%=post.date_display%>
                                 </p>
@@ -104,21 +107,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript">
+
+
     document.addEventListener("DOMContentLoaded", function() {
         var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
 
         if ("IntersectionObserver" in window) {
             let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(function(entry) {
+                entries.forEach(function(entry, index) {
                     if (entry.isIntersecting) {
                         let lazyImage = entry.target;
                         lazyImage.src = lazyImage.dataset.src;
                         lazyImage.classList.remove("lazy");
                         lazyImageObserver.unobserve(lazyImage);
-                        console.log("Loaded + " + lazyImage)
+                        console.log("Loaded + " + lazyImage.src)
+                        console.log(entries)
+                        console.log("Index now is " + index + "and length is " + entries.length)
                     }
+                    console.log(entries.length)
                 });
             });
+
 
             lazyImages.forEach(function(lazyImage) {
                 lazyImageObserver.observe(lazyImage);
