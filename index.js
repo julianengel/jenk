@@ -88,12 +88,18 @@ app.get('/', function(request, response) {
 // Feed Page 
 app.get('/feed', function(request, response) {
 
-    // get all the posts - sort by date
-    Post.find({}, function(err, posts) {
-        if (err) throw err;
+
+Post.find({}).sort({date: -1}).exec(function(err, posts) { if (err) throw err;
         console.log(posts);
-        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts });
-    });
+        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts }); });
+
+
+    // // get all the posts - sort by date
+    // Post.find({},null, {sort: '-1'}, function(err, posts) {
+    //     if (err) throw err;
+    //     console.log(posts);
+    //     response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts });
+    // });
 
 });
 
