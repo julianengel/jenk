@@ -16,8 +16,19 @@
         <nav class="navbar navbar-light bg-light fixed-top">
             <a class="navbar-brand">
                 <%=app_name%></a>
-            <form class="form-inline d-sm-none d-none d-md-block">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <form class="form-inline d-sm-none d-none d-md-block" action="/search" method="get">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 40px;margin-top:05px;" id="searchButton">Search</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" onclick="setSearch('location')">Location</a>
+                            <a class="dropdown-item" onclick="setSearch('date_display')">Date</a>
+                            <a class="dropdown-item" onclick="setSearch('day')">Day</a>
+                            <a class="dropdown-item" onclick="setSearch('description')">Text</a>
+                        </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with dropdown button" value="<%=search_term%>" placeholder="Search" id='searchbox' name="description">
+                </div>
             </form>
             <div class="" id="navbarNav">
                 <ul class="navbar-nav ">
@@ -80,7 +91,11 @@
                         </div>
                         <div class="meta">
                             <div class="actions">
-                                <div class="icons"><i class="far fa-heart"></i> <i class="far fa-comment"></i> <i class="far fa-paper-plane"></i> <i class="far fa-bookmark right-float"></i></div>
+                                <div class="icons">
+                                    <i class="far fa-heart" onclick="makeRed(this)"></i> 
+                                    <i class="far fa-comment"></i>
+                                    <i class="far fa-paper-plane" onclick="send(this)"></i>
+                                    <i class="far fa-bookmark right-float" onclick="makePurple(this)"></i></div>
                             </div>
                             <div class="description">
                                 <p> <b>1.000.000 loves </b></p>
@@ -107,6 +122,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript">
+    function setSearch(tg) {
+
+        let searchbox = document.getElementById('searchbox')
+        let searchButton = document.getElementById('searchButton')
+
+        searchbox.name = tg
+        searchButton.innerHTML = tg
+
+        if (tg == "date_display") {
+            searchButton.innerHTML = "date"
+        }
+
+        if (tg == "day") {
+            searchbox.value = "#"
+        }
+    }
+
+    function makeRed(self){
+
+        self.classList.add('red')
+        self.classList.add('icon-heart-half')
+
+    }
+     function makePurple(self){
+
+        self.classList.add('purple')
+
+    }
+
+    function send(item){
+
+        // http://localhost:3001/post/0
+        let day = item.parentElement.parentElement.parentElement.previousSibling.id
+        day = day.substring(1)
+        window.open(`/post/${day}`, '_blank');
+        // console.log(item.parentElement.parentElement.parentElement.previousSibling.id)
+    }
 
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -123,7 +175,7 @@
                         console.log("Loaded + " + lazyImage.src)
                     }
                 });
-            },{rootMargin: "0px 0px 1500px 0px"});
+            }, { rootMargin: "0px 0px 1500px 0px" });
 
 
             lazyImages.forEach(function(lazyImage) {

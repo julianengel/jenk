@@ -29,19 +29,21 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 // Serve Static files from the public directory
 app.use(express.static(__dirname + '/public'))
+app.use('/post',express.static(__dirname + '/public'))
+
 // Use Compression
 app.use(compression());
 // Use HTML Minifier
 app.use(minifyHTML({
-    override:      true,
+    override: true,
     exception_url: false,
     htmlMinifier: {
-        removeComments:            true,
-        collapseWhitespace:        true,
+        removeComments: true,
+        collapseWhitespace: true,
         collapseBooleanAttributes: true,
-        removeAttributeQuotes:     true,
-        removeEmptyAttributes:     true,
-        minifyJS:                  true
+        removeAttributeQuotes: true,
+        removeEmptyAttributes: true,
+        minifyJS: true
     }
 }));
 
@@ -89,19 +91,41 @@ app.get('/', function(request, response) {
 app.get('/feed', function(request, response) {
 
 
-Post.find({}).sort({date: -1}).exec(function(err, posts) { if (err) throw err;
+    Post.find({}).sort({ date: -1 }).exec(function(err, posts) {
+        if (err) throw err;
         console.log(posts);
-        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts }); });
-
-
-    // // get all the posts - sort by date
-    // Post.find({},null, {sort: '-1'}, function(err, posts) {
-    //     if (err) throw err;
-    //     console.log(posts);
-    //     response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts });
-    // });
+        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts, search_term: '' });
+    });
 
 });
+
+
+app.get('/search', function(request, response) {
+
+    let queryP = Object.keys(request.query)[0]
+    let searchTerm = Object.values(request.query)[0] || ""
+    var query = {}
+    query[queryP] = { "$regex": searchTerm, "$options": "i" }
+    Post.find(query).sort({ date: -1 }).exec(function(err, posts) {
+        if (err) throw err;
+        console.log(posts)
+        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts, search_term: searchTerm });
+    });
+
+});
+
+app.get('/post/:day', function(request, response) {
+    let day = request.params.day
+    let d = `#${day}`
+    Post.find({day:d}).sort({ date: -1 }).exec(function(err, posts) {
+        if (err) throw err;
+        console.log(posts)
+        response.render('pages/feed', { app_name: app_name, profile_name: profile_name, posts: posts, search_term: '' });
+    });
+
+});
+
+
 
 // Render Success Page
 app.get("/success", function(request, response) {
@@ -121,7 +145,7 @@ app.get("/error", function(request, response) {
 // Upload POST route to accept upload
 app.post('/upload', function(request, response, next) {
 
-// Upload files to AWS
+    // Upload files to AWS
     upload(request, response, function(error) {
         if (error) {
             console.log(error);
